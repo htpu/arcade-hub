@@ -105,10 +105,23 @@ const UIManager = (() => {
             overlay.classList.add('hidden');
         }
         
-        // Show mobile controls when overlay is hidden, if needed
-        const needsControls = ['snake', 'tetris', 'racer', 'runner', 'piano', 'c2048', 'core', 'breakout'].includes(GameState.mode);
+        const mode = GameState.mode;
+        const needsControls = ['snake', 'tetris', 'racer', 'runner', 'piano', 'c2048', 'core', 'breakout'].includes(mode);
         const controls = document.getElementById('mobile-controls');
-        if (controls && needsControls) controls.classList.remove('hidden');
+        
+        if (controls && needsControls) {
+            controls.classList.remove('hidden');
+            
+            // Context-sensitive button visibility
+            const onlyLeftRight = ['racer', 'runner', 'core', 'breakout'].includes(mode);
+            const upBtn = controls.querySelector('[data-action="up"]');
+            const downBtn = controls.querySelector('[data-action="down"]');
+            const rotateBtn = controls.querySelector('[data-action="rotate"]');
+            
+            if (upBtn) upBtn.style.display = onlyLeftRight ? 'none' : 'flex';
+            if (downBtn) downBtn.style.display = onlyLeftRight ? 'none' : 'flex';
+            if (rotateBtn) rotateBtn.style.display = (onlyLeftRight || mode === 'snake' || mode === 'c2048') ? 'none' : 'flex';
+        }
     };
 
     const updateScore = (score) => {

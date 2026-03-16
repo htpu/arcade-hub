@@ -391,11 +391,11 @@ function setupMobileControls() {
     // Button handlers
     controls.querySelectorAll('.control-btn').forEach(btn => {
         const handleAction = (e) => {
-            e.preventDefault();
+            if (e) e.preventDefault();
             const action = btn.dataset.action;
             const key = btn.dataset.key;
 
-            // Handle system actions first
+            // System actions (Always available when screen is active)
             if (action === 'menu') {
                 switchScreen('home');
                 return;
@@ -411,11 +411,10 @@ function setupMobileControls() {
                 return;
             }
 
-            // Game-specific controls
+            // Gameplay actions (Only when active and NOT paused)
             if (!GameState.active || GameState.paused) return;
             
             if (key !== undefined) {
-                // Piano key
                 const result = Games.piano.playKey(parseInt(key));
                 handlePianoResult(result);
                 return;
@@ -455,17 +454,30 @@ function setupMobileControls() {
             UIManager.updateScore(GameState.score);
         };
 
+        // Use touchstart for mobile, mousedown for desktop
         btn.addEventListener('touchstart', (e) => {
             e.preventDefault();
             btn.classList.add('pressed');
-            handleAction(e);
-        });
+            handleAction();
+        }, { passive: false });
         
-        btn.addEventListener('touchend', () => {
+        btn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            btn.classList.remove('pressed');
+        }, { passive: false });
+        
+        btn.addEventListener('mousedown', (e) => {
+            btn.classList.add('pressed');
+            handleAction();
+        });
+
+        btn.addEventListener('mouseup', () => {
             btn.classList.remove('pressed');
         });
-        
-        btn.addEventListener('mousedown', handleAction);
+
+        btn.addEventListener('mouseleave', () => {
+            btn.classList.remove('pressed');
+        });
     });
 }
 

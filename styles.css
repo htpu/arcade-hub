@@ -118,19 +118,6 @@ a, button {
     display: none !important;
 }
 
-/* Screen visibility - overrides hidden for active screens */
-#home-screen.active,
-#dashboard-screen.active,
-#guide-screen.active,
-#about-screen.active,
-#game-container.active {
-    display: flex !important;
-}
-
-#home-screen.active {
-    display: block !important;
-}
-
 /* ========== Typography ========== */
 h1, h2, h3 {
     font-family: 'Orbitron', sans-serif;

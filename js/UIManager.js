@@ -146,22 +146,24 @@ const UIManager = (() => {
     };
 
     const showScreen = (screenId) => {
-        document.querySelectorAll('main, section').forEach(s => {
-            s.classList.add('hidden');
-            s.classList.remove('active');
+        document.querySelectorAll('main > section').forEach(s => {
+            s.style.display = 'none';
         });
 
         const screen = document.getElementById(screenId);
         if (screen) {
-            screen.classList.remove('hidden');
-            screen.classList.add('active');
+            // Reset to default display
+            if (screenId === 'home-screen') {
+                screen.style.display = 'block';
+            } else {
+                screen.style.display = 'flex';
+            }
         }
     };
 
     const hideAllScreens = () => {
-        document.querySelectorAll('main, section').forEach(s => {
-            s.classList.add('hidden');
-            s.classList.remove('active');
+        document.querySelectorAll('main > section').forEach(s => {
+            s.style.display = 'none';
         });
     };
 

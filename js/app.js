@@ -22,10 +22,18 @@ function toggleSidebar() {
 }
 
 // DOM Elements
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas?.getContext('2d');
 const scoreEl = document.getElementById('current-score');
 const pauseBtn = document.getElementById('pauseBtn');
+
+// Get canvas lazily to ensure it's available
+function getCanvas() {
+    return document.getElementById('gameCanvas');
+}
+
+function getCtx() {
+    const c = getCanvas();
+    return c ? c.getContext('2d') : null;
+}
 
 // Games registry
 const Games = {
@@ -94,12 +102,21 @@ function resetGame() {
         scoreEl.innerText = '00';
     }
     
-    if (Games[GameState.mode]) {
-        GameState.speed = Games[GameState.mode].init();
-    }
-    
-    if (ctx && Games[GameState.mode]) {
-        Games[GameState.mode].run(ctx, false, false);
+    try {
+        if (Games[GameState.mode]) {
+            GameState.speed = Games[GameState.mode].init();
+        }
+        
+        const ctx = getCtx();
+        if (ctx && Games[GameState.mode]) {
+            GameState.speed = Games[GameState.mode].init();
+        }
+        
+        if (ctx && Games[GameState.mode]) {
+            Games[GameState.mode].run(ctx, false, false);
+        }
+    } catch (e) {
+        console.error('Game reset error:', e);
     }
 }
 
@@ -161,6 +178,7 @@ function endGame() {
 
 function runGameLoop() {
     if (!GameState.active || GameState.paused) return;
+    const ctx = getCtx();
     if (!ctx || !Games[GameState.mode]) return;
 
     const game = Games[GameState.mode];

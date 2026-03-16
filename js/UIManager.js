@@ -31,7 +31,7 @@ const UIManager = (() => {
                 }
 
                 grid.innerHTML += `
-                    <div onclick="switchScreen('${id}')" class="cyber-card group" style="--card-glow: 0 0 20px ${game.color}40; border-color: ${game.color}30">
+                    <div onclick="switchScreen('${id}')" class="cyber-card group" style="--card-glow: 0 0 20px ${game.color}40; --card-accent: ${game.color}; border-color: ${game.color}30">
                         <div class="card-icon" style="background: ${game.color}15; border-color: ${game.color}30">
                             <svg class="w-6 h-6" fill="${game.color}" viewBox="0 0 24 24">
                                 <path d="${game.icon}"></path>

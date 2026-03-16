@@ -71,26 +71,45 @@ async function switchScreen(mode) {
     if (mode === 'home') {
         GameState.active = false;
         clearInterval(GameState.loop);
+        hideMobileControls();
         UIManager.showScreen('home-screen');
         UIManager.refreshHighScores();
     } else if (mode === 'dashboard') {
         GameState.active = false;
         clearInterval(GameState.loop);
+        hideMobileControls();
         UIManager.renderDashboard();
         UIManager.showScreen('dashboard-screen');
     } else if (mode === 'guide') {
         GameState.active = false;
         clearInterval(GameState.loop);
+        hideMobileControls();
         UIManager.showScreen('guide-screen');
     } else if (mode === 'about') {
         GameState.active = false;
         clearInterval(GameState.loop);
+        hideMobileControls();
         UIManager.showScreen('about-screen');
     } else if (Games[mode]) {
         GameState.mode = mode;
         UIManager.showScreen('game-container');
         UIManager.updateGameTitle(`INTERFACE.${mode.toUpperCase()}`);
         UIManager.setActiveNavItem(mode);
+        
+        // Show mobile controls for appropriate games
+        const needsControls = ['snake', 'tetris', 'racer', 'runner', 'piano', 'c2048', 'core'].includes(mode);
+        if (needsControls) {
+            showMobileControls();
+        } else {
+            hideMobileControls();
+        }
+        
+        // Update piano controls visibility
+        const pianoControls = document.querySelector('.piano-controls');
+        if (pianoControls) {
+            pianoControls.style.display = mode === 'piano' ? 'flex' : 'none';
+        }
+        
         resetGame();
         UIManager.showOverlay('start');
     }
@@ -341,6 +360,159 @@ function handleCanvasMouseMove(e) {
     }
 }
 
+// Mobile controls
+let touchStartX = 0;
+let touchStartY = 0;
+const SWIPE_THRESHOLD = 30;
+
+function showMobileControls() {
+    const controls = document.getElementById('mobile-controls');
+    if (controls) {
+        controls.classList.remove('hidden');
+    }
+}
+
+function hideMobileControls() {
+    const controls = document.getElementById('mobile-controls');
+    if (controls) {
+        controls.classList.add('hidden');
+    }
+}
+
+function setupMobileControls() {
+    const controls = document.getElementById('mobile-controls');
+    if (!controls) return;
+
+    // Button handlers
+    controls.querySelectorAll('.control-btn').forEach(btn => {
+        const handleAction = (e) => {
+            e.preventDefault();
+            if (!GameState.active || GameState.paused) return;
+            
+            const action = btn.dataset.action;
+            const key = btn.dataset.key;
+            
+            if (key !== undefined) {
+                // Piano key
+                const result = Games.piano.playKey(parseInt(key));
+                handlePianoResult(result);
+                return;
+            }
+            
+            switch(action) {
+                case 'left':
+                    if (GameState.mode === 'snake') Games.snake.setDirection({x: -1, y: 0});
+                    if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('left');
+                    if (GameState.mode === 'tetris') Games.tetris.move(-1, 0);
+                    if (GameState.mode === 'core') Games.core.rotate('left');
+                    if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowLeft'); GameState.score += r.scoreGain || 0; }
+                    break;
+                case 'right':
+                    if (GameState.mode === 'snake') Games.snake.setDirection({x: 1, y: 0});
+                    if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('right');
+                    if (GameState.mode === 'tetris') Games.tetris.move(1, 0);
+                    if (GameState.mode === 'core') Games.core.rotate('right');
+                    if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowRight'); GameState.score += r.scoreGain || 0; }
+                    break;
+                case 'up':
+                    if (GameState.mode === 'snake') Games.snake.setDirection({x: 0, y: -1});
+                    if (GameState.mode === 'tetris') Games.tetris.rotate();
+                    if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowUp'); GameState.score += r.scoreGain || 0; }
+                    break;
+                case 'down':
+                    if (GameState.mode === 'snake') Games.snake.setDirection({x: 0, y: 1});
+                    if (GameState.mode === 'tetris') Games.tetris.move(0, 1);
+                    if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowDown'); GameState.score += r.scoreGain || 0; }
+                    break;
+                case 'rotate':
+                    if (GameState.mode === 'tetris') Games.tetris.rotate();
+                    break;
+            }
+            UIManager.updateScore(GameState.score);
+        };
+
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            btn.classList.add('pressed');
+            handleAction(e);
+        });
+        
+        btn.addEventListener('touchend', () => {
+            btn.classList.remove('pressed');
+        });
+        
+        btn.addEventListener('mousedown', handleAction);
+    });
+}
+
+function handlePianoResult(result) {
+    if (result === 'score') {
+        GameState.score += 10;
+        UIManager.updateScore(GameState.score);
+    } else if (result === 'miss') {
+        GameState.score = Math.max(0, GameState.score - 2);
+        UIManager.updateScore(GameState.score);
+    }
+}
+
+// Swipe detection for canvas
+function handleTouchStart(e) {
+    if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }
+}
+
+function handleTouchEnd(e) {
+    if (!GameState.active || GameState.paused) return;
+    
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+    
+    // Check if it's a swipe
+    if (Math.abs(deltaX) < SWIPE_THRESHOLD && Math.abs(deltaY) < SWIPE_THRESHOLD) {
+        return;
+    }
+    
+    // Determine swipe direction
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > 0) {
+            // Swipe right
+            if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('right');
+            if (GameState.mode === 'tetris') Games.tetris.move(1, 0);
+            if (GameState.mode === 'core') Games.core.rotate('right');
+            if (GameState.mode === 'snake' && Games.snake.getDirection().x === 0) Games.snake.setDirection({x: 1, y: 0});
+            if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowRight'); GameState.score += r.scoreGain || 0; }
+        } else {
+            // Swipe left
+            if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('left');
+            if (GameState.mode === 'tetris') Games.tetris.move(-1, 0);
+            if (GameState.mode === 'core') Games.core.rotate('left');
+            if (GameState.mode === 'snake' && Games.snake.getDirection().x === 0) Games.snake.setDirection({x: -1, y: 0});
+            if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowLeft'); GameState.score += r.scoreGain || 0; }
+        }
+    } else {
+        // Vertical swipe
+        if (deltaY > 0) {
+            // Swipe down
+            if (GameState.mode === 'tetris') Games.tetris.move(0, 1);
+            if (GameState.mode === 'snake' && Games.snake.getDirection().y === 0) Games.snake.setDirection({x: 0, y: 1});
+            if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowDown'); GameState.score += r.scoreGain || 0; }
+        } else {
+            // Swipe up
+            if (GameState.mode === 'tetris') Games.tetris.rotate();
+            if (GameState.mode === 'snake' && Games.snake.getDirection().y === 0) Games.snake.setDirection({x: 0, y: -1});
+            if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowUp'); GameState.score += r.scoreGain || 0; }
+        }
+    }
+    
+    UIManager.updateScore(GameState.score);
+}
+
 // Time update
 function startTimeUpdater() {
     setInterval(() => {
@@ -367,9 +539,14 @@ function initApp() {
     if (canvas) {
         canvas.addEventListener('mousedown', handleCanvasClick);
         canvas.addEventListener('mousemove', handleCanvasMouseMove);
+        canvas.addEventListener('touchstart', handleTouchStart, {passive: false});
+        canvas.addEventListener('touchend', handleTouchEnd, {passive: false});
     }
 
     document.addEventListener('keydown', handleKeyDown);
+
+    // Setup mobile controls
+    setupMobileControls();
 
     const muteNavBtn = document.getElementById('muteNavBtn');
     if (muteNavBtn) {

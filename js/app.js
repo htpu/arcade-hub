@@ -454,28 +454,19 @@ function setupMobileControls() {
             UIManager.updateScore(GameState.score);
         };
 
-        // Use touchstart for mobile, mousedown for desktop
-        btn.addEventListener('touchstart', (e) => {
+        // Use Pointer Events for unified touch/mouse handling
+        btn.addEventListener('pointerdown', (e) => {
             e.preventDefault();
             btn.classList.add('pressed');
             handleAction();
-        }, { passive: false });
+        });
         
-        btn.addEventListener('touchend', (e) => {
+        btn.addEventListener('pointerup', (e) => {
             e.preventDefault();
             btn.classList.remove('pressed');
-        }, { passive: false });
-        
-        btn.addEventListener('mousedown', (e) => {
-            btn.classList.add('pressed');
-            handleAction();
         });
 
-        btn.addEventListener('mouseup', () => {
-            btn.classList.remove('pressed');
-        });
-
-        btn.addEventListener('mouseleave', () => {
+        btn.addEventListener('pointerleave', () => {
             btn.classList.remove('pressed');
         });
     });

@@ -97,7 +97,7 @@ async function switchScreen(mode) {
         UIManager.setActiveNavItem(mode);
         
         // Show mobile controls for appropriate games
-        const needsControls = ['snake', 'tetris', 'racer', 'runner', 'piano', 'c2048', 'core'].includes(mode);
+        const needsControls = ['snake', 'tetris', 'racer', 'runner', 'piano', 'c2048', 'core', 'breakout'].includes(mode);
         if (needsControls) {
             showMobileControls();
         } else {
@@ -322,6 +322,11 @@ function handleKeyDown(e) {
 
 // Mouse/touch handlers
 function handleCanvasClick(e) {
+    if (!GameState.active && !document.getElementById('overlay')?.classList.contains('hidden')) {
+        startGame();
+        return;
+    }
+
     if (GameState.mode === 'memory' && GameState.active && !GameState.paused) {
         const coords = Utils.getCanvasCoords(canvas, e.clientX, e.clientY);
         const x = coords.x;
@@ -354,9 +359,16 @@ function handleCanvasMouseMove(e) {
 
     if (GameState.mode === 'core' && GameState.active) {
         const coords = Utils.getCanvasCoords(canvas, e.clientX, e.clientY);
-        const x = coords.x - 400 - 64;
+        const x = coords.x - 400;
         const y = coords.y - 250;
         Games.core.setAngle(Math.atan2(y, x));
+    }
+}
+
+function handleCanvasTouchMove(e) {
+    if (e.touches.length > 0) {
+        e.preventDefault();
+        handleCanvasMouseMove(e.touches[0]);
     }
 }
 
@@ -406,6 +418,7 @@ function setupMobileControls() {
                     if (GameState.mode === 'tetris') Games.tetris.move(-1, 0);
                     if (GameState.mode === 'core') Games.core.rotate('left');
                     if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowLeft'); GameState.score += r.scoreGain || 0; }
+                    if (GameState.mode === 'breakout') Games.breakout.setPaddleX(Math.max(50, Games.breakout.getPaddleX() - 40));
                     break;
                 case 'right':
                     if (GameState.mode === 'snake') Games.snake.setDirection({x: 1, y: 0});
@@ -413,6 +426,7 @@ function setupMobileControls() {
                     if (GameState.mode === 'tetris') Games.tetris.move(1, 0);
                     if (GameState.mode === 'core') Games.core.rotate('right');
                     if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowRight'); GameState.score += r.scoreGain || 0; }
+                    if (GameState.mode === 'breakout') Games.breakout.setPaddleX(Math.min(750, Games.breakout.getPaddleX() + 40));
                     break;
                 case 'up':
                     if (GameState.mode === 'snake') Games.snake.setDirection({x: 0, y: -1});
@@ -487,6 +501,7 @@ function handleTouchEnd(e) {
             if (GameState.mode === 'core') Games.core.rotate('right');
             if (GameState.mode === 'snake' && Games.snake.getDirection().x === 0) Games.snake.setDirection({x: 1, y: 0});
             if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowRight'); GameState.score += r.scoreGain || 0; }
+            if (GameState.mode === 'breakout') Games.breakout.setPaddleX(Math.min(750, Games.breakout.getPaddleX() + 50));
         } else {
             // Swipe left
             if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('left');
@@ -494,6 +509,7 @@ function handleTouchEnd(e) {
             if (GameState.mode === 'core') Games.core.rotate('left');
             if (GameState.mode === 'snake' && Games.snake.getDirection().x === 0) Games.snake.setDirection({x: -1, y: 0});
             if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowLeft'); GameState.score += r.scoreGain || 0; }
+            if (GameState.mode === 'breakout') Games.breakout.setPaddleX(Math.max(50, Games.breakout.getPaddleX() - 50));
         }
     } else {
         // Vertical swipe
@@ -507,6 +523,11 @@ function handleTouchEnd(e) {
             if (GameState.mode === 'tetris') Games.tetris.rotate();
             if (GameState.mode === 'snake' && Games.snake.getDirection().y === 0) Games.snake.setDirection({x: 0, y: -1});
             if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowUp'); GameState.score += r.scoreGain || 0; }
+            
+            // Start game on swipe up if not active
+            if (!GameState.active && !document.getElementById('overlay')?.classList.contains('hidden')) {
+                startGame();
+            }
         }
     }
     
@@ -539,7 +560,11 @@ function initApp() {
     if (canvas) {
         canvas.addEventListener('mousedown', handleCanvasClick);
         canvas.addEventListener('mousemove', handleCanvasMouseMove);
-        canvas.addEventListener('touchstart', handleTouchStart, {passive: false});
+        canvas.addEventListener('touchstart', (e) => {
+            handleTouchStart(e);
+            handleCanvasClick(e.touches[0]);
+        }, {passive: false});
+        canvas.addEventListener('touchmove', handleCanvasTouchMove, {passive: false});
         canvas.addEventListener('touchend', handleTouchEnd, {passive: false});
     }
 

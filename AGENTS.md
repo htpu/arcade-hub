@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-Single-file HTML/JS arcade game hub with multiple browser-based games (Snake, Tetris, Racer, Breakout, Memory, Piano, 2048, Core Defender). Uses Tailwind CSS via CDN, vanilla JavaScript, and localStorage for persistence.
+Modular HTML/JS/CSS arcade game hub with multiple browser-based games.
+Live URL: [https://arcade.htpu.net](https://arcade.htpu.net)
+Deployment: Cloudflare Pages (arcade-hub-dhy.pages.dev)
 
 ## Commands
 
@@ -20,9 +22,10 @@ This is a vanilla HTML project with no build system, linter, or test framework.
 ## Code Style Guidelines
 
 ### General Structure
-- Single `index.html` file with embedded `<style>` and `<script>` blocks
-- All JavaScript goes in the `<script>` tag at the bottom of `<body>`
-- CSS goes in `<style>` tag in `<head>`
+- Modular architecture with `index.html`, `styles.css`, and a `js/` directory
+- Core logic and games are organized into separate files within the `js/` directory
+- JavaScript files are loaded via `<script>` tags in `index.html`
+- Styles are defined in `styles.css` and Tailwind utility classes
 
 ### JavaScript Conventions
 - **Module Pattern**: Use IIFE (Immediately Invoked Function Expressions) for namespacing
@@ -45,7 +48,7 @@ This is a vanilla HTML project with no build system, linter, or test framework.
 
 ### HTML/CSS Style
 - Use Tailwind CSS utilities via CDN (`https://cdn.tailwindcss.com`)
-- Custom styles in `<style>` block using CSS custom properties
+- Custom styles in `styles.css` using CSS custom properties
 - Prefer Tailwind classes over custom CSS where possible
 - Use semantic HTML elements (`aside`, `main`, `section`, `nav`)
 
@@ -66,13 +69,14 @@ This is a vanilla HTML project with no build system, linter, or test framework.
 - Use event delegation where appropriate
 - Minimize DOM updates during game loops
 
-### Code Organization (within script block)
-1. Constants (CATEGORIES, CONFIG)
-2. Utility functions
-3. Manager modules (StatsManager, AudioManager, UIManager)
-4. Game definitions (Games object)
-5. Event handlers
-6. Initialization code
+### Code Organization
+1. `index.html`: Main layout and module inclusion
+2. `styles.css`: Custom layout and theme styles
+3. `js/utils.js`: Shared constants and helper functions
+4. `js/StatsManager.js`, `js/AudioManager.js`, `js/UIManager.js`: Core service modules
+5. `js/games/*.js`: Individual game modules
+6. `js/app.js`: Application entry point and coordination
+
 
 ### Best Practices
 - Always call `StatsManager.load()` on startup

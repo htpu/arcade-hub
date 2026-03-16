@@ -93,8 +93,10 @@ const BreakoutGame = (() => {
     };
 
     const setPaddleX = (x) => {
-        paddle.x = x;
+        paddle.x = Utils.clamp(x, paddle.w / 2, CONFIG.CANVAS_WIDTH - paddle.w / 2);
     };
+
+    const getPaddleX = () => paddle.x;
 
     const getSpeed = (currentSpeed) => currentSpeed;
 
@@ -102,6 +104,7 @@ const BreakoutGame = (() => {
         init,
         run,
         setPaddleX,
+        getPaddleX,
         getSpeed
     };
 })();

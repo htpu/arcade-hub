@@ -324,6 +324,13 @@ function initApp() {
     // Initialize UI
     UIManager.init();
 
+    // Set version
+    const versionEls = ['app-version', 'home-version'];
+    versionEls.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = CONFIG.VERSION;
+    });
+
     // Set up event listeners
     if (canvas) {
         canvas.addEventListener('mousedown', handleCanvasClick);

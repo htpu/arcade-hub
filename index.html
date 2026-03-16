@@ -70,7 +70,7 @@
         <section id="home-screen" style="display: block;">
             <div class="home-title">
                 <h1>Arcade Hub</h1>
-                <p>Cybernetic Entertainment Core - Integrated V<span id="home-version">3.3.6</span></p>
+                <p>Cybernetic Entertainment Core - Integrated V<span id="home-version">3.4.0</span></p>
             </div>
             <div id="game-grid" class="game-grid"></div>
             <footer class="home-footer">
@@ -117,7 +117,7 @@
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
                 <h2>Cyber Arcade Hub</h2>
-                <p class="about-version">Advanced Neural Interface Matrix v<span id="app-version">3.3.6</span></p>
+                <p class="about-version">Advanced Neural Interface Matrix v<span id="app-version">3.4.0</span></p>
             </div>
             <div class="about-content">
                 <div class="about-card">
@@ -166,26 +166,31 @@
             </div>
             <div class="controls-hint"></div>
             <div id="mobile-controls" class="mobile-controls hidden">
-                <div class="control-row">
-                    <button class="control-btn" data-action="left">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                    </button>
-                    <button class="control-btn" data-action="up">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                    </button>
-                    <button class="control-btn" data-action="right">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
+                <!-- Floating Joystick visual elements -->
+                <div id="joystick-base" class="joystick-base hidden">
+                    <div id="joystick-knob" class="joystick-knob"></div>
                 </div>
-                <div class="control-row">
-                    <button class="control-btn" data-action="down">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+
+                <!-- Invisible zones for tapping/swiping -->
+                <div id="touch-zone" class="touch-zone">
+                    <div id="tap-zone-left" class="tap-zone" data-action="left"></div>
+                    <div id="tap-zone-right" class="tap-zone" data-action="right"></div>
+                </div>
+
+                <!-- System & Specialized Controls -->
+                <div class="control-row system-controls">
+                    <button class="control-btn-small" data-action="menu">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 6h18M3 18h18"></path></svg>
                     </button>
-                    <button class="control-btn control-btn-rot" data-action="rotate">
+                    <button class="control-btn-small" data-action="pause">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"></path></svg>
+                    </button>
+                    <button class="control-btn-small control-btn-rot hidden" data-action="rotate">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     </button>
                 </div>
-                <div class="piano-controls control-row">
+
+                <div class="piano-controls control-row hidden">
                     <button class="control-btn piano-key" data-key="0">S</button>
                     <button class="control-btn piano-key" data-key="1">D</button>
                     <button class="control-btn piano-key" data-key="2">J</button>

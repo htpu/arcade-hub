@@ -61,6 +61,7 @@ async function switchScreen(mode) {
     }
 
     GameState.paused = false;
+    TouchController.reset();
     if (pauseBtn) {
         pauseBtn.classList.add('hidden');
     }
@@ -370,106 +371,178 @@ let touchStartX = 0;
 let touchStartY = 0;
 const SWIPE_THRESHOLD = 30;
 
+/**
+ * Touch Control Management
+ */
+const TouchController = (() => {
+    let joystickBase = null;
+    let joystickKnob = null;
+    let touchStartPos = null;
+    let isMoving = false;
+    const JOYSTICK_RADIUS = 60;
+    const DEADZONE = 10;
+    const TRIGGER_DIST = 30;
+
+    const init = () => {
+        joystickBase = document.getElementById('joystick-base');
+        joystickKnob = document.getElementById('joystick-knob');
+        const touchArea = document.getElementById('touch-zone');
+        const controls = document.getElementById('mobile-controls');
+
+        if (touchArea) {
+            touchArea.addEventListener('pointerdown', handlePointerDown);
+            window.addEventListener('pointermove', handlePointerMove);
+            window.addEventListener('pointerup', handlePointerUp);
+        }
+
+        // Generic button handlers (Menu, Pause, Piano Keys)
+        if (controls) {
+            controls.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('pointerdown', (e) => {
+                    const action = btn.dataset.action;
+                    const key = btn.dataset.key;
+                    if (action) handleAction(action);
+                    if (key !== undefined) {
+                        const result = Games.piano.playKey(parseInt(key));
+                        handlePianoResult(result);
+                    }
+                    btn.classList.add('active', 'pressed');
+                });
+                btn.addEventListener('pointerup', () => btn.classList.remove('active', 'pressed'));
+                btn.addEventListener('pointerleave', () => btn.classList.remove('active', 'pressed'));
+            });
+        }
+    };
+
+    const handleAction = (action) => {
+        if (action === 'menu') switchScreen('home');
+        if (action === 'pause') togglePause();
+        if (action === 'start') {
+            if (!GameState.active || GameState.paused) startGame();
+        }
+        if (action === 'rotate' && GameState.active && !GameState.paused) {
+            if (GameState.mode === 'tetris') Games.tetris.rotate();
+        }
+    };
+
+    const handlePointerDown = (e) => {
+        if (!GameState.active || GameState.paused) {
+            // If overlay is up, any tap on the control area starts the game
+            if (!document.getElementById('overlay')?.classList.contains('hidden')) {
+                startGame();
+            }
+            return;
+        }
+
+        touchStartPos = { x: e.clientX, y: e.clientY };
+        isMoving = true;
+
+        // Show joystick for 4-direction games
+        if (['snake', 'c2048', 'tetris'].includes(GameState.mode)) {
+            joystickBase.classList.remove('hidden');
+            joystickBase.style.left = `${e.clientX}px`;
+            joystickBase.style.top = `${e.clientY}px`;
+            joystickKnob.style.transform = 'translate(0, 0)';
+        }
+        
+        // Immediate action for Tap Zone games
+        if (['racer', 'runner', 'breakout', 'core'].includes(GameState.mode)) {
+            const side = e.clientX < window.innerWidth / 2 ? 'left' : 'right';
+            executeDirection(side);
+        }
+    };
+
+    const handlePointerMove = (e) => {
+        if (!isMoving || !touchStartPos) return;
+
+        const dx = e.clientX - touchStartPos.x;
+        const dy = e.clientY - touchStartPos.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Update joystick visual
+        if (joystickBase && !joystickBase.classList.contains('hidden')) {
+            const angle = Math.atan2(dy, dx);
+            const moveDist = Math.min(dist, JOYSTICK_RADIUS);
+            const kx = Math.cos(angle) * moveDist;
+            const ky = Math.sin(angle) * moveDist;
+            joystickKnob.style.transform = `translate(${kx}px, ${ky}px)`;
+
+            // Trigger cardinal directions for Snake/2048/Tetris
+            if (dist > TRIGGER_DIST) {
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    executeDirection(dx > 0 ? 'right' : 'left');
+                } else {
+                    executeDirection(dy > 0 ? 'down' : 'up');
+                }
+                // Reset start pos to allow multiple moves in one drag for 2048/Tetris
+                if (['c2048', 'tetris'].includes(GameState.mode)) {
+                    touchStartPos = { x: e.clientX, y: e.clientY };
+                }
+            }
+        }
+
+        // Handle continuous movement for Racer/Runner/Breakout/Core
+        if (['racer', 'runner', 'breakout', 'core'].includes(GameState.mode)) {
+            const side = e.clientX < window.innerWidth / 2 ? 'left' : 'right';
+            executeDirection(side);
+        }
+    };
+
+    const handlePointerUp = () => {
+        isMoving = false;
+        touchStartPos = null;
+        if (joystickBase) joystickBase.classList.add('hidden');
+    };
+
+    const executeDirection = (dir) => {
+        if (!GameState.active || GameState.paused) return;
+        const mode = GameState.mode;
+
+        if (mode === 'snake') {
+            const cur = Games.snake.getDirection();
+            if (dir === 'up' && cur.y === 0) Games.snake.setDirection({ x: 0, y: -1 });
+            if (dir === 'down' && cur.y === 0) Games.snake.setDirection({ x: 0, y: 1 });
+            if (dir === 'left' && cur.x === 0) Games.snake.setDirection({ x: -1, y: 0 });
+            if (dir === 'right' && cur.x === 0) Games.snake.setDirection({ x: 1, y: 0 });
+        } else if (mode === 'tetris') {
+            if (dir === 'left') Games.tetris.move(-1, 0);
+            if (dir === 'right') Games.tetris.move(1, 0);
+            if (dir === 'down') Games.tetris.move(0, 1);
+            if (dir === 'up') Games.tetris.rotate();
+        } else if (mode === 'c2048') {
+            const keys = { left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', down: 'ArrowDown' };
+            const res = Games.c2048.move(keys[dir]);
+            if (res && res.moved) {
+                GameState.score += res.scoreGain;
+                UIManager.updateScore(GameState.score);
+            }
+        } else if (['racer', 'runner'].includes(mode)) {
+            const game = Games[mode];
+            if (game.moveLane) game.moveLane(dir);
+            else if (game.move) game.move(dir);
+        } else if (mode === 'breakout') {
+            const curX = Games.breakout.getPaddleX();
+            Games.breakout.setPaddleX(dir === 'left' ? curX - 25 : curX + 25);
+        } else if (mode === 'core') {
+            Games.core.rotate(dir);
+        }
+    };
+
+    const reset = () => {
+        handlePointerUp();
+    };
+
+    return { init, reset };
+})();
+
 function showMobileControls() {
     const controls = document.getElementById('mobile-controls');
-    if (controls) {
-        controls.classList.remove('hidden');
-    }
+    if (controls) controls.classList.remove('hidden');
 }
 
 function hideMobileControls() {
     const controls = document.getElementById('mobile-controls');
-    if (controls) {
-        controls.classList.add('hidden');
-    }
-}
-
-function setupMobileControls() {
-    const controls = document.getElementById('mobile-controls');
-    if (!controls) return;
-
-    // Button handlers
-    controls.querySelectorAll('.control-btn').forEach(btn => {
-        const handleAction = (e) => {
-            if (e) e.preventDefault();
-            const action = btn.dataset.action;
-            const key = btn.dataset.key;
-
-            // System actions (Always available when screen is active)
-            if (action === 'menu') {
-                switchScreen('home');
-                return;
-            }
-            if (action === 'pause') {
-                togglePause();
-                return;
-            }
-            if (action === 'start') {
-                if (!GameState.active || GameState.paused) {
-                    startGame();
-                }
-                return;
-            }
-
-            // Gameplay actions (Only when active and NOT paused)
-            if (!GameState.active || GameState.paused) return;
-            
-            if (key !== undefined) {
-                const result = Games.piano.playKey(parseInt(key));
-                handlePianoResult(result);
-                return;
-            }
-            
-            switch(action) {
-                case 'left':
-                    if (GameState.mode === 'snake') Games.snake.setDirection({x: -1, y: 0});
-                    if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('left');
-                    if (GameState.mode === 'tetris') Games.tetris.move(-1, 0);
-                    if (GameState.mode === 'core') Games.core.rotate('left');
-                    if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowLeft'); GameState.score += r.scoreGain || 0; }
-                    if (GameState.mode === 'breakout') Games.breakout.setPaddleX(Math.max(50, Games.breakout.getPaddleX() - 40));
-                    break;
-                case 'right':
-                    if (GameState.mode === 'snake') Games.snake.setDirection({x: 1, y: 0});
-                    if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('right');
-                    if (GameState.mode === 'tetris') Games.tetris.move(1, 0);
-                    if (GameState.mode === 'core') Games.core.rotate('right');
-                    if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowRight'); GameState.score += r.scoreGain || 0; }
-                    if (GameState.mode === 'breakout') Games.breakout.setPaddleX(Math.min(750, Games.breakout.getPaddleX() + 40));
-                    break;
-                case 'up':
-                    if (GameState.mode === 'snake') Games.snake.setDirection({x: 0, y: -1});
-                    if (GameState.mode === 'tetris') Games.tetris.rotate();
-                    if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowUp'); GameState.score += r.scoreGain || 0; }
-                    break;
-                case 'down':
-                    if (GameState.mode === 'snake') Games.snake.setDirection({x: 0, y: 1});
-                    if (GameState.mode === 'tetris') Games.tetris.move(0, 1);
-                    if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowDown'); GameState.score += r.scoreGain || 0; }
-                    break;
-                case 'rotate':
-                    if (GameState.mode === 'tetris') Games.tetris.rotate();
-                    break;
-            }
-            UIManager.updateScore(GameState.score);
-        };
-
-        // Use Pointer Events for unified touch/mouse handling
-        btn.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            btn.classList.add('pressed');
-            handleAction();
-        });
-        
-        btn.addEventListener('pointerup', (e) => {
-            e.preventDefault();
-            btn.classList.remove('pressed');
-        });
-
-        btn.addEventListener('pointerleave', () => {
-            btn.classList.remove('pressed');
-        });
-    });
+    if (controls) controls.classList.add('hidden');
 }
 
 function handlePianoResult(result) {
@@ -480,71 +553,6 @@ function handlePianoResult(result) {
         GameState.score = Math.max(0, GameState.score - 2);
         UIManager.updateScore(GameState.score);
     }
-}
-
-// Swipe detection for canvas
-function handleTouchStart(e) {
-    if (e.touches.length === 1) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-    }
-}
-
-function handleTouchEnd(e) {
-    if (!GameState.active || GameState.paused) return;
-    
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
-    
-    const deltaX = touchEndX - touchStartX;
-    const deltaY = touchEndY - touchStartY;
-    
-    // Check if it's a swipe
-    if (Math.abs(deltaX) < SWIPE_THRESHOLD && Math.abs(deltaY) < SWIPE_THRESHOLD) {
-        return;
-    }
-    
-    // Determine swipe direction
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // Horizontal swipe
-        if (deltaX > 0) {
-            // Swipe right
-            if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('right');
-            if (GameState.mode === 'tetris') Games.tetris.move(1, 0);
-            if (GameState.mode === 'core') Games.core.rotate('right');
-            if (GameState.mode === 'snake' && Games.snake.getDirection().x === 0) Games.snake.setDirection({x: 1, y: 0});
-            if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowRight'); GameState.score += r.scoreGain || 0; }
-            if (GameState.mode === 'breakout') Games.breakout.setPaddleX(Math.min(750, Games.breakout.getPaddleX() + 50));
-        } else {
-            // Swipe left
-            if (GameState.mode === 'racer' || GameState.mode === 'runner') Games[GameState.mode].move('left');
-            if (GameState.mode === 'tetris') Games.tetris.move(-1, 0);
-            if (GameState.mode === 'core') Games.core.rotate('left');
-            if (GameState.mode === 'snake' && Games.snake.getDirection().x === 0) Games.snake.setDirection({x: -1, y: 0});
-            if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowLeft'); GameState.score += r.scoreGain || 0; }
-            if (GameState.mode === 'breakout') Games.breakout.setPaddleX(Math.max(50, Games.breakout.getPaddleX() - 50));
-        }
-    } else {
-        // Vertical swipe
-        if (deltaY > 0) {
-            // Swipe down
-            if (GameState.mode === 'tetris') Games.tetris.move(0, 1);
-            if (GameState.mode === 'snake' && Games.snake.getDirection().y === 0) Games.snake.setDirection({x: 0, y: 1});
-            if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowDown'); GameState.score += r.scoreGain || 0; }
-        } else {
-            // Swipe up
-            if (GameState.mode === 'tetris') Games.tetris.rotate();
-            if (GameState.mode === 'snake' && Games.snake.getDirection().y === 0) Games.snake.setDirection({x: 0, y: -1});
-            if (GameState.mode === 'c2048') { const r = Games.c2048.move('ArrowUp'); GameState.score += r.scoreGain || 0; }
-            
-            // Start game on swipe up if not active
-            if (!GameState.active && !document.getElementById('overlay')?.classList.contains('hidden')) {
-                startGame();
-            }
-        }
-    }
-    
-    UIManager.updateScore(GameState.score);
 }
 
 // Time update
@@ -573,18 +581,12 @@ function initApp() {
     if (canvas) {
         canvas.addEventListener('mousedown', handleCanvasClick);
         canvas.addEventListener('mousemove', handleCanvasMouseMove);
-        canvas.addEventListener('touchstart', (e) => {
-            handleTouchStart(e);
-            handleCanvasClick(e.touches[0]);
-        }, {passive: false});
-        canvas.addEventListener('touchmove', handleCanvasTouchMove, {passive: false});
-        canvas.addEventListener('touchend', handleTouchEnd, {passive: false});
     }
 
     document.addEventListener('keydown', handleKeyDown);
 
-    // Setup mobile controls
-    setupMobileControls();
+    // Initialize new Touch Controller
+    TouchController.init();
 
     const muteNavBtn = document.getElementById('muteNavBtn');
     if (muteNavBtn) {

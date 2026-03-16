@@ -112,15 +112,17 @@ const UIManager = (() => {
         if (controls && needsControls) {
             controls.classList.remove('hidden');
             
-            // Context-sensitive button visibility
-            const onlyLeftRight = ['racer', 'runner', 'core', 'breakout'].includes(mode);
-            const upBtn = controls.querySelector('[data-action="up"]');
-            const downBtn = controls.querySelector('[data-action="down"]');
+            // Context-sensitive visibility
             const rotateBtn = controls.querySelector('[data-action="rotate"]');
+            const pianoKeys = controls.querySelector('.piano-controls');
             
-            if (upBtn) upBtn.style.display = onlyLeftRight ? 'none' : 'flex';
-            if (downBtn) downBtn.style.display = onlyLeftRight ? 'none' : 'flex';
-            if (rotateBtn) rotateBtn.style.display = (onlyLeftRight || mode === 'snake' || mode === 'c2048') ? 'none' : 'flex';
+            if (rotateBtn) {
+                rotateBtn.classList.toggle('hidden', mode !== 'tetris');
+            }
+            
+            if (pianoKeys) {
+                pianoKeys.classList.toggle('hidden', mode !== 'piano');
+            }
         }
     };
 

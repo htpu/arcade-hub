@@ -426,23 +426,29 @@ const TouchController = (() => {
     };
 
     const handlePointerDown = (e) => {
-        if (!GameState.active || GameState.paused) {
-            // If overlay is up, any tap on the control area starts the game
-            if (!document.getElementById('overlay')?.classList.contains('hidden')) {
-                startGame();
-            }
+        // Overlay handling
+        if (!document.getElementById('overlay')?.classList.contains('hidden')) {
+            startGame();
             return;
         }
+
+        if (!GameState.active || GameState.paused) return;
 
         touchStartPos = { x: e.clientX, y: e.clientY };
         isMoving = true;
 
         // Show joystick for 4-direction games
         if (['snake', 'c2048', 'tetris'].includes(GameState.mode)) {
-            joystickBase.classList.remove('hidden');
-            joystickBase.style.left = `${e.clientX}px`;
-            joystickBase.style.top = `${e.clientY}px`;
-            joystickKnob.style.transform = 'translate(0, 0)';
+            if (!joystickBase) joystickBase = document.getElementById('joystick-base');
+            if (!joystickKnob) joystickKnob = document.getElementById('joystick-knob');
+            
+            if (joystickBase) {
+                joystickBase.classList.remove('hidden');
+                joystickBase.style.display = 'flex'; // Force display
+                joystickBase.style.left = `${e.clientX}px`;
+                joystickBase.style.top = `${e.clientY}px`;
+                if (joystickKnob) joystickKnob.style.transform = 'translate(0, 0)';
+            }
         }
         
         // Immediate action for Tap Zone games
@@ -491,7 +497,10 @@ const TouchController = (() => {
     const handlePointerUp = () => {
         isMoving = false;
         touchStartPos = null;
-        if (joystickBase) joystickBase.classList.add('hidden');
+        if (joystickBase) {
+            joystickBase.classList.add('hidden');
+            joystickBase.style.display = 'none';
+        }
     };
 
     const executeDirection = (dir) => {

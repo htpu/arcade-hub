@@ -235,8 +235,6 @@ function handleKeyDown(e) {
         return;
     }
 
-    }
-
     // Pause toggle
     if (e.key.toLowerCase() === 'p') {
         togglePause();

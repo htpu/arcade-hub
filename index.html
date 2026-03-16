@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cyber Arcade Ultimate - Pro Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <aside id="sidebar">
+        <div class="sidebar-logo" onclick="switchScreen('home')">
+            <div class="logo-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <span class="logo-text">Cyber Hub</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-category">
+                <div class="nav-item" onclick="switchScreen('dashboard')">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    <span class="nav-text">Analytics</span>
+                </div>
+                <div class="nav-item" onclick="switchScreen('guide')">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <span class="nav-text">Manual</span>
+                </div>
+            </div>
+
+            <div class="nav-category">
+                <p class="category-label">Arcade Matrix</p>
+                <div id="nav-arcade" class="nav-items"></div>
+            </div>
+
+            <div class="nav-category">
+                <p class="category-label">Cognitive Layer</p>
+                <div id="nav-cognitive" class="nav-items"></div>
+            </div>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="nav-item" onclick="switchScreen('about')">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="nav-text">About</span>
+            </div>
+            <div class="nav-item" id="muteNavBtn">
+                <svg id="nav-icon-unmuted" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                <svg id="nav-icon-muted" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2 M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                <span class="nav-text">Audio Link</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="app-header">
+            <div class="header-left">
+                <div class="status-dot"></div>
+                <span class="header-status">Neural Stream Active</span>
+            </div>
+            <div id="system-time" class="system-time">12:00:00</div>
+            <div class="header-right"></div>
+        </header>
+
+        <section id="home-screen" class="active">
+            <div class="home-title">
+                <h1>Arcade Hub</h1>
+                <p>Cybernetic Entertainment Core - Integrated V3.1</p>
+            </div>
+            <div id="game-grid" class="game-grid"></div>
+            <footer class="home-footer">
+                <p>&copy; 2026 CYBER ARCADE HUB. ALL NEURAL RIGHTS RESERVED.</p>
+            </footer>
+        </section>
+
+        <section id="dashboard-screen">
+            <div class="dashboard-title">
+                <h2>Neural Analytics</h2>
+            </div>
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <span class="stat-label">Active Time</span>
+                    <span id="total-time-val" class="stat-value">00:00:00</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Sessions</span>
+                    <span id="total-rounds-val" class="stat-value">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Efficiency</span>
+                    <span id="avg-score-val" class="stat-value">0</span>
+                </div>
+                <div class="stat-card reset-card">
+                    <button onclick="StatsManager.resetAll()" class="reset-btn">Format Hub</button>
+                </div>
+            </div>
+            <div id="game-stats-grid" class="game-stats-grid"></div>
+        </section>
+
+        <section id="guide-screen">
+            <div class="guide-header">
+                <h2>System Manual</h2>
+                <p>Operational protocols and gameplay directives</p>
+            </div>
+            <div id="guide-content" class="guide-content"></div>
+        </section>
+
+        <section id="about-screen">
+            <div class="about-header">
+                <div class="about-logo">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h2>Cyber Arcade Hub</h2>
+                <p class="about-version">Advanced Neural Interface Matrix v3.1</p>
+            </div>
+            <div class="about-content">
+                <div class="about-card">
+                    <h3>Mission Statement</h3>
+                    <p>Cyber Arcade is a unified entertainment framework designed for high-performance neural links. Optimized for minimal latency and high visual fidelity, the hub serves as a central gateway to arcade modules and cognitive training layers.</p>
+                </div>
+                <div class="about-features">
+                    <div class="about-card">
+                        <h3>System Optimized For</h3>
+                        <ul>
+                            <li>High-DPI Desktop Monitors</li>
+                            <li>Touch-Enabled iPad Pro Modules</li>
+                            <li>2026 Tesla Model Y Neural Terminals</li>
+                            <li>Starlink Mini Low-Latency Connections</li>
+                        </ul>
+                    </div>
+                    <div class="about-card">
+                        <h3>Core Technologies</h3>
+                        <ul>
+                            <li>Web Audio Synthesis Engine</li>
+                            <li>LocalStorage Persistence Protocol</li>
+                            <li>Responsive Vector Iconography</li>
+                            <li>Multi-Modal Input Handler</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="about-footer">
+                    <p>Copyright &copy; 2026 Cyber Arcade Hub</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="game-container">
+            <div class="game-header">
+                <button id="pauseBtn" class="pause-btn hidden">PAUSE [P]</button>
+                <div class="game-info">
+                    <p id="game-title" class="game-title">MODULE.ACTIVE</p>
+                    <p id="current-score" class="current-score">00</p>
+                </div>
+            </div>
+            <div class="game-canvas-wrapper">
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+                <div id="overlay" class="hidden">
+                    <div id="overlay-content" class="overlay-content"></div>
+                </div>
+            </div>
+            <div class="controls-hint"></div>
+        </section>
+    </main>
+
+    <script src="js/utils.js"></script>
+    <script src="js/StatsManager.js"></script>
+    <script src="js/AudioManager.js"></script>
+    <script src="js/UIManager.js"></script>
+    <script src="js/games/snake.js"></script>
+    <script src="js/games/tetris.js"></script>
+    <script src="js/games/racer.js"></script>
+    <script src="js/games/runner.js"></script>
+    <script src="js/games/c2048.js"></script>
+    <script src="js/games/core.js"></script>
+    <script src="js/games/breakout.js"></script>
+    <script src="js/games/memory.js"></script>
+    <script src="js/games/piano.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -22,22 +22,22 @@ const UIManager = (() => {
                 if (nav) {
                     nav.innerHTML += `
                         <div onclick="switchScreen('${id}')" id="nav-item-${id}" class="nav-item group">
-                            <svg class="w-5 h-5 flex-shrink-0 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="${game.color}" viewBox="0 0 24 24">
                                 <path stroke-width="2" d="${game.icon}"></path>
                             </svg>
-                            <span class="nav-text text-xs font-bold uppercase tracking-widest">${game.name}</span>
+                            <span class="nav-text text-xs font-bold uppercase tracking-widest" style="color: ${game.color}">${game.name}</span>
                         </div>
                     `;
                 }
 
                 grid.innerHTML += `
-                    <div onclick="switchScreen('${id}')" class="cyber-card group">
-                        <div class="card-icon">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div onclick="switchScreen('${id}')" class="cyber-card group" style="--card-glow: 0 0 20px ${game.color}40; border-color: ${game.color}30">
+                        <div class="card-icon" style="background: ${game.color}15; border-color: ${game.color}30">
+                            <svg class="w-6 h-6" fill="none" stroke="${game.color}" viewBox="0 0 24 24">
                                 <path stroke-width="2" d="${game.icon}"></path>
                             </svg>
                         </div>
-                        <h3 class="card-title">${game.name}</h3>
+                        <h3 class="card-title" style="color: ${game.color}">${game.name}</h3>
                         <span class="card-highscore">HS: ${game.hs}</span>
                     </div>
                 `;

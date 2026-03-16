@@ -178,15 +178,15 @@ const TETRIS_SHAPES = [
 ];
 
 const GAME_STATS_TEMPLATE = {
-    snake: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Neon Snake', color: 'text-green-500', icon: 'M12 21a9 9 0 110-18 9 9 0 010 18z M9 9l6 6' },
-    runner: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Grid Runner', color: 'text-blue-500', icon: 'M8 9l4-4 4 4m0 6l-4 4-4-4' },
-    piano: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Cyber Piano', color: 'text-cyan-500', icon: 'M9 18V5l12-2v13' },
-    c2048: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Cyber 2048', color: 'text-orange-500', icon: 'M4 4h7v7H4V4zm9 0h7v7h-7V4zm0 9h7v7h-7v-7zm-9 0h7v7H4v-7z' },
-    breakout: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Breakout', color: 'text-yellow-500', icon: 'M19 11H5' },
-    tetris: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Cyber Tetris', color: 'text-purple-500', icon: 'M10 4h4v12h4v4h-8V4z' },
-    racer: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Pulse Racer', color: 'text-rose-500', icon: 'M13 5l7 7-7 7' },
-    memory: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Neural Memory', color: 'text-amber-500', icon: 'M9.5 14.5a2.5 2.5 0 100-5 M14.5 14.5a2.5 2.5 0 100-5' },
-    core: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Core Defender', color: 'text-emerald-500', icon: 'M12 15l-3-3m0 0l3-3' }
+    snake: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Neon Snake', color: '#22c55e', bgColor: 'bg-green-500/20', borderColor: 'border-green-500/30', icon: 'M12 21a9 9 0 110-18 9 9 0 010 18z M9 9l6 6' },
+    runner: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Grid Runner', color: '#3b82f6', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-500/30', icon: 'M8 9l4-4 4 4m0 6l-4 4-4-4' },
+    piano: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Cyber Piano', color: '#06b6d4', bgColor: 'bg-cyan-500/20', borderColor: 'border-cyan-500/30', icon: 'M9 18V5l12-2v13' },
+    c2048: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Cyber 2048', color: '#f97316', bgColor: 'bg-orange-500/20', borderColor: 'border-orange-500/30', icon: 'M4 4h7v7H4V4zm9 0h7v7h-7V4zm0 9h7v7h-7v-7zm-9 0h7v7H4v-7z' },
+    breakout: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Breakout', color: '#eab308', bgColor: 'bg-yellow-500/20', borderColor: 'border-yellow-500/30', icon: 'M19 11H5' },
+    tetris: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Cyber Tetris', color: '#a855f7', bgColor: 'bg-purple-500/20', borderColor: 'border-purple-500/30', icon: 'M10 4h4v12h4v4h-8V4z' },
+    racer: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Pulse Racer', color: '#f43f5e', bgColor: 'bg-rose-500/20', borderColor: 'border-rose-500/30', icon: 'M13 5l7 7-7 7' },
+    memory: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Neural Memory', color: '#fbbf24', bgColor: 'bg-amber-500/20', borderColor: 'border-amber-500/30', icon: 'M9.5 14.5a2.5 2.5 0 100-5 M14.5 14.5a2.5 2.5 0 100-5' },
+    core: { hs: 0, rounds: 0, time: 0, totalScore: 0, name: 'Core Defender', color: '#10b981', bgColor: 'bg-emerald-500/20', borderColor: 'border-emerald-500/30', icon: 'M12 15l-3-3m0 0l3-3' }
 };
 
 const INITIAL_DATA = {

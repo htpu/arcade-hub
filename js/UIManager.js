@@ -87,7 +87,7 @@ const UIManager = (() => {
             html = `
                 <h2 class="overlay-title">Connection Lost</h2>
                 <p class="overlay-subtitle">Neural link terminated. Score: ${document.getElementById('current-score')?.innerText || '00'}</p>
-                <button onclick="resetGame()" class="overlay-btn">Retry [Enter]</button>
+                <button onclick="startGame()" class="overlay-btn">Retry [Enter]</button>
             `;
         }
 

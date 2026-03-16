@@ -225,15 +225,16 @@ function runGameLoop() {
 
 // Keyboard input handler
 function handleKeyDown(e) {
-    // Start/resume game
     if ((e.key === 'Enter' || e.key === ' ') && !document.getElementById('overlay')?.classList.contains('hidden')) {
         e.preventDefault();
-        if (GameState.paused) {
+        if (GameState.active && GameState.paused) {
             togglePause();
         } else {
             startGame();
         }
         return;
+    }
+
     }
 
     // Pause toggle

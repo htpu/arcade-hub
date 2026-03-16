@@ -93,6 +93,10 @@ const UIManager = (() => {
 
         overlayContent.innerHTML = html;
         overlay.classList.remove('hidden');
+        
+        // Hide mobile controls when overlay is shown
+        const controls = document.getElementById('mobile-controls');
+        if (controls) controls.classList.add('hidden');
     };
 
     const hideOverlay = () => {
@@ -100,6 +104,11 @@ const UIManager = (() => {
         if (overlay) {
             overlay.classList.add('hidden');
         }
+        
+        // Show mobile controls when overlay is hidden, if needed
+        const needsControls = ['snake', 'tetris', 'racer', 'runner', 'piano', 'c2048', 'core', 'breakout'].includes(GameState.mode);
+        const controls = document.getElementById('mobile-controls');
+        if (controls && needsControls) controls.classList.remove('hidden');
     };
 
     const updateScore = (score) => {

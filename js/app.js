@@ -95,16 +95,10 @@ async function switchScreen(mode) {
         UIManager.showScreen('game-container');
         UIManager.updateGameTitle(`INTERFACE.${mode.toUpperCase()}`);
         UIManager.setActiveNavItem(mode);
-        
-        // Show mobile controls for appropriate games
-        const needsControls = ['snake', 'tetris', 'racer', 'runner', 'piano', 'c2048', 'core', 'breakout'].includes(mode);
-        if (needsControls) {
-            showMobileControls();
-        } else {
-            hideMobileControls();
-        }
-        
-        // Update piano controls visibility
+
+        // Hide mobile controls initially, UIManager.showOverlay will also ensure they are hidden
+        hideMobileControls();
+
         const pianoControls = document.querySelector('.piano-controls');
         if (pianoControls) {
             pianoControls.style.display = mode === 'piano' ? 'flex' : 'none';
@@ -398,10 +392,27 @@ function setupMobileControls() {
     controls.querySelectorAll('.control-btn').forEach(btn => {
         const handleAction = (e) => {
             e.preventDefault();
-            if (!GameState.active || GameState.paused) return;
-            
             const action = btn.dataset.action;
             const key = btn.dataset.key;
+
+            // Handle system actions first
+            if (action === 'menu') {
+                switchScreen('home');
+                return;
+            }
+            if (action === 'pause') {
+                togglePause();
+                return;
+            }
+            if (action === 'start') {
+                if (!GameState.active || GameState.paused) {
+                    startGame();
+                }
+                return;
+            }
+
+            // Game-specific controls
+            if (!GameState.active || GameState.paused) return;
             
             if (key !== undefined) {
                 // Piano key

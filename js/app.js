@@ -13,6 +13,14 @@ const GameState = {
     loop: null
 };
 
+// Toggle sidebar on mobile
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('expanded');
+    }
+}
+
 // DOM Elements
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas?.getContext('2d');
@@ -37,6 +45,12 @@ async function switchScreen(mode) {
     try {
         await AudioManager.init();
     } catch (e) {}
+
+    // Close sidebar on mobile
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.remove('expanded');
+    }
 
     GameState.paused = false;
     if (pauseBtn) {

@@ -15,12 +15,44 @@ body {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
     color: #f8fafc;
-    touch-action: none;
-    overflow: hidden;
     margin: 0;
     padding: 0;
     min-height: 100vh;
     display: flex;
+}
+
+#gameCanvas {
+    touch-action: none;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 64px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: margin-left 0.3s;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#sidebar:hover ~ .main-content {
+    margin-left: 240px;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        padding-bottom: 60px;
+    }
+    
+    #sidebar {
+        transform: translateX(-100%);
+    }
+    
+    #sidebar.expanded {
+        transform: translateX(0);
+    }
 }
 
 a, button {
@@ -29,6 +61,26 @@ a, button {
 
 .hidden {
     display: none !important;
+}
+
+/* ========== Mobile Menu Button ========== */
+.menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    padding: 8px;
+    margin-right: 8px;
+}
+
+.menu-btn:hover {
+    color: var(--neon-cyan);
+}
+
+@media (max-width: 768px) {
+    .menu-btn {
+        display: block;
+    }
 }
 
 /* ========== Sidebar Styles ========== */

@@ -22,8 +22,8 @@ const UIManager = (() => {
                 if (nav) {
                     nav.innerHTML += `
                         <div onclick="switchScreen('${id}')" id="nav-item-${id}" class="nav-item group">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="${game.color}" viewBox="0 0 24 24">
-                                <path stroke-width="2" d="${game.icon}"></path>
+                            <svg class="w-5 h-5 flex-shrink-0" fill="${game.color}" viewBox="0 0 24 24">
+                                <path d="${game.icon}"></path>
                             </svg>
                             <span class="nav-text text-xs font-bold uppercase tracking-widest" style="color: ${game.color}">${game.name}</span>
                         </div>
@@ -33,8 +33,8 @@ const UIManager = (() => {
                 grid.innerHTML += `
                     <div onclick="switchScreen('${id}')" class="cyber-card group" style="--card-glow: 0 0 20px ${game.color}40; border-color: ${game.color}30">
                         <div class="card-icon" style="background: ${game.color}15; border-color: ${game.color}30">
-                            <svg class="w-6 h-6" fill="none" stroke="${game.color}" viewBox="0 0 24 24">
-                                <path stroke-width="2" d="${game.icon}"></path>
+                            <svg class="w-6 h-6" fill="${game.color}" viewBox="0 0 24 24">
+                                <path d="${game.icon}"></path>
                             </svg>
                         </div>
                         <h3 class="card-title" style="color: ${game.color}">${game.name}</h3>

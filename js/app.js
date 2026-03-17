@@ -588,6 +588,13 @@ function startTimeUpdater() {
 
 // Initialize
 function initApp() {
+    // Handle initial hash on page load FIRST (before any UI renders)
+    const initialHash = window.location.hash.slice(1);
+    if (initialHash && Games[initialHash]) {
+        // Hide all screens immediately to prevent flash
+        UIManager.hideAllScreens();
+    }
+
     // Load stats
     StatsManager.load();
 
@@ -632,8 +639,7 @@ function initApp() {
         }
     });
 
-    // Handle initial hash on page load
-    const initialHash = window.location.hash.slice(1);
+    // Handle initial hash - call switchScreen after everything is ready
     if (initialHash && Games[initialHash]) {
         switchScreen(initialHash, false);
     }

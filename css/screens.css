@@ -1,0 +1,320 @@
+#home-screen {
+    flex: 1;
+    width: 100%;
+    max-width: 1152px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    overflow-y: auto;
+}
+
+.home-title {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.home-title h1 {
+    font-size: clamp(36px, 8vw, 72px);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: white;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #fff 0%, var(--neon-cyan) 50%, var(--neon-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(6, 182, 212, 0.5));
+}
+
+.home-title p {
+    color: rgba(148, 163, 184, 0.7);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 24px;
+}
+
+@media (min-width: 640px) {
+    .game-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .game-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.home-footer {
+    margin-top: 80px;
+    padding: 32px 0;
+    border-top: 1px solid rgba(6, 182, 212, 0.1);
+    text-align: center;
+}
+
+.home-footer p {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    color: rgba(148, 163, 184, 0.4);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+#dashboard-screen {
+    display: none;
+    flex: 1;
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    overflow-y: auto;
+}
+
+#dashboard-screen.active {
+    display: block;
+}
+
+.dashboard-title {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.dashboard-title h2 {
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: white;
+    margin: 0;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #fff 0%, var(--neon-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stats-overview {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+}
+
+@media (min-width: 768px) {
+    .stats-overview {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.game-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+    margin-top: 48px;
+}
+
+@media (min-width: 768px) {
+    .game-stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+#guide-screen {
+    display: none;
+    flex: 1;
+    width: 100%;
+    max-width: 896px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    overflow-y: auto;
+}
+
+#guide-screen.active {
+    display: block;
+}
+
+.guide-header {
+    margin-bottom: 48px;
+}
+
+.guide-header h2 {
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: white;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #fff 0%, var(--neon-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.guide-header p {
+    color: rgba(148, 163, 184, 0.6);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.guide-content {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.guide-category {
+    display: flex;
+    flex-direction: column;
+}
+
+.guide-category-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+.guide-items {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 24px;
+}
+
+@media (min-width: 768px) {
+    .guide-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.guide-item {
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.guide-item h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.guide-item p {
+    font-family: 'Rajdhani', sans-serif;
+    color: rgba(148, 163, 184, 0.8);
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+#about-screen {
+    display: none;
+    flex: 1;
+    width: 100%;
+    max-width: 672px;
+    margin: 0 auto;
+    padding: 80px 24px;
+    overflow-y: auto;
+}
+
+#about-screen.active {
+    display: block;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 64px;
+}
+
+.about-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 32px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, var(--neon-cyan), #0891b2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 40px rgba(6, 182, 212, 0.4);
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%);
+}
+
+.about-logo svg {
+    width: 40px;
+    height: 40px;
+    color: black;
+}
+
+.about-header h2 {
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.1em;
+    margin: 0;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #fff 0%, var(--neon-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.about-version {
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--neon-cyan);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    margin-top: 16px;
+    text-transform: uppercase;
+    text-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+}
+
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.about-features {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .about-features {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.about-footer {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.about-footer p {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    color: rgba(148, 163, 184, 0.4);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+}

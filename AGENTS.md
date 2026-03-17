@@ -4,7 +4,33 @@
 
 Modular HTML/JS/CSS arcade game hub with multiple browser-based games.
 Live URL: [https://arcade.htpu.net](https://arcade.htpu.net)
-Deployment: Cloudflare Pages (arcade-hub-dhy.pages.dev)
+
+## Deployment
+
+### GitHub Pages (Current)
+
+The project uses **GitHub Pages** with custom domain `arcade.htpu.net`.
+
+**Setup:**
+1. Repository Settings → Pages
+2. Source: Deploy from a branch
+3. Branch: `main`, Folder: `/ (root)`
+4. Custom domain: `arcade.htpu.net` (force HTTPS after DNS propagates)
+
+**DNS Configuration:**
+- Add CNAME record in DNS provider:
+  - Type: CNAME
+  - Name: arcade
+  - Value: `<username>.github.io`
+
+**Deployment:**
+- Push to main branch → auto-deploys to GitHub Pages
+- Custom domain `arcade.htpu.net` will work automatically
+
+**No Scripts Required:**
+GitHub Pages auto-deploys on push. No workflow scripts needed.
+
+---
 
 ## Commands
 
@@ -22,10 +48,11 @@ This is a vanilla HTML project with no build system, linter, or test framework.
 ## Code Style Guidelines
 
 ### General Structure
-- Modular architecture with `index.html`, `styles.css`, and a `js/` directory
+- Modular architecture with `index.html`, `styles.css`, `css/` directory, and `js/` directory
 - Core logic and games are organized into separate files within the `js/` directory
+- CSS modules in `css/` subdirectory
 - JavaScript files are loaded via `<script>` tags in `index.html`
-- Styles are defined in `styles.css` and Tailwind utility classes
+- Styles are defined in `styles.css` which imports modules from `css/`
 
 ### JavaScript Conventions
 - **Module Pattern**: Use IIFE (Immediately Invoked Function Expressions) for namespacing
@@ -71,12 +98,18 @@ This is a vanilla HTML project with no build system, linter, or test framework.
 
 ### Code Organization
 1. `index.html`: Main layout and module inclusion
-2. `styles.css`: Custom layout and theme styles
-3. `js/utils.js`: Shared constants and helper functions
-4. `js/StatsManager.js`, `js/AudioManager.js`, `js/UIManager.js`: Core service modules
-5. `js/games/*.js`: Individual game modules
-6. `js/app.js`: Application entry point and coordination
-
+2. `styles.css`: Main CSS file that imports modules
+3. `css/`: CSS modules
+   - `css/base.css`: Variables, fonts, global styles
+   - `css/layout.css`: Layout, sidebar, header
+   - `css/components.css`: Reusable components
+   - `css/screens.css`: Screen/page styles
+   - `css/game.css`: Game canvas and controls
+4. `js/constants.js`: Configuration constants
+5. `js/utils.js`: Shared helper functions
+6. `js/StatsManager.js`, `js/AudioManager.js`, `js/UIManager.js`: Core service modules
+7. `js/games/*.js`: Individual game modules
+8. `js/app.js`: Application entry point and coordination
 
 ### Best Practices
 - Always call `StatsManager.load()` on startup

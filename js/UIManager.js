@@ -171,23 +171,21 @@ const UIManager = (() => {
 
     const showScreen = (screenId) => {
         document.querySelectorAll('main > section').forEach(s => {
-            s.style.display = 'none';
+            s.classList.remove('screen-active');
+            s.classList.add('screen-hidden');
         });
 
         const screen = document.getElementById(screenId);
         if (screen) {
-            // Reset to default display
-            if (screenId === 'home-screen') {
-                screen.style.display = 'block';
-            } else {
-                screen.style.display = 'flex';
-            }
+            screen.classList.remove('screen-hidden');
+            screen.classList.add('screen-active');
         }
     };
 
     const hideAllScreens = () => {
         document.querySelectorAll('main > section').forEach(s => {
-            s.style.display = 'none';
+            s.classList.remove('screen-active');
+            s.classList.add('screen-hidden');
         });
     };
 

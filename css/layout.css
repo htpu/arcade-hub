@@ -10,7 +10,7 @@
     min-height: 100vh;
 }
 
-#sidebar:hover ~ .main-content {
+#sidebar.expanded ~ .main-content {
     margin-left: 240px;
 }
 
@@ -48,12 +48,35 @@
     }
 }
 
+/* Back button */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    color: var(--neon-cyan);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+}
+
+.back-btn:hover {
+    background: rgba(6, 182, 212, 0.2);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+}
+
 #sidebar {
     width: var(--sidebar-width-collapsed);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: rgba(5, 5, 5, 0.95);
     backdrop-filter: blur(20px);
-    cursor: default;
+    cursor: pointer;
     position: fixed;
     left: 0;
     top: 0;
@@ -66,13 +89,41 @@
     overflow: hidden;
 }
 
-#sidebar:hover {
+#sidebar.expanded {
     width: var(--sidebar-width-expanded);
+}
+
+.sidebar-toggle {
+    position: absolute;
+    right: 8px;
+    top: 28px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: all 0.2s;
+    border-radius: 4px;
+}
+
+.sidebar-toggle:hover {
+    color: var(--neon-cyan);
+    background: rgba(6, 182, 212, 0.1);
+}
+
+#sidebar:hover .sidebar-toggle,
+#sidebar.expanded .sidebar-toggle {
+    opacity: 1;
+}
+
+#sidebar:not(:hover):not(.expanded) .sidebar-toggle {
+    opacity: 0;
 }
 
 .sidebar-logo {
     padding: 0 20px;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -117,7 +168,8 @@
     text-shadow: 0 0 10px var(--neon-cyan);
 }
 
-#sidebar:hover .logo-text {
+#sidebar:hover .logo-text,
+#sidebar.expanded .logo-text {
     opacity: 1;
 }
 
@@ -147,7 +199,8 @@
     margin-bottom: 16px;
 }
 
-#sidebar:hover .category-label {
+#sidebar:hover .category-label,
+#sidebar.expanded .category-label {
     display: block;
 }
 
@@ -239,7 +292,8 @@
     color: #94a3b8;
 }
 
-#sidebar:hover .nav-text {
+#sidebar:hover .nav-text,
+#sidebar.expanded .nav-text {
     opacity: 1;
 }
 

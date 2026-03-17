@@ -13,7 +13,7 @@ const GameState = {
     loop: null
 };
 
-// Toggle sidebar on mobile
+// Toggle sidebar - now click-based
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {
@@ -60,6 +60,14 @@ async function switchScreen(mode, updateHistory = true) {
         sidebar.classList.remove('expanded');
     }
 
+    // Toggle back button visibility
+    const backBtn = document.getElementById('backBtn');
+    const isGamePage = Games[mode];
+    const isSubPage = mode === 'dashboard' || mode === 'guide' || mode === 'about';
+    if (backBtn) {
+        backBtn.classList.toggle('hidden', !isGamePage && !isSubPage);
+    }
+
     GameState.paused = false;
     TouchController.reset();
     if (pauseBtn) {
@@ -75,26 +83,26 @@ async function switchScreen(mode, updateHistory = true) {
         hideMobileControls();
         UIManager.showScreen('home-screen');
         UIManager.refreshHighScores();
-        if (updateHistory) history.pushState({}, '', '?page=home');
+        if (updateHistory) history.pushState({}, '', window.location.pathname);
     } else if (mode === 'dashboard') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.renderDashboard();
         UIManager.showScreen('dashboard-screen');
-        if (updateHistory) history.pushState({}, '', '?page=dashboard');
+        if (updateHistory) history.pushState({}, '', `?page=dashboard`);
     } else if (mode === 'guide') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.showScreen('guide-screen');
-        if (updateHistory) history.pushState({}, '', '?page=guide');
+        if (updateHistory) history.pushState({}, '', `?page=guide`);
     } else if (mode === 'about') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.showScreen('about-screen');
-        if (updateHistory) history.pushState({}, '', '?page=about');
+        if (updateHistory) history.pushState({}, '', `?page=about`);
     } else if (Games[mode]) {
         GameState.mode = mode;
         UIManager.showScreen('game-container');

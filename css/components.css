@@ -40,12 +40,14 @@
 }
 
 .cyber-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-8px) scale(1.02);
     background: rgba(26, 31, 44, 0.8);
     border-color: var(--card-accent, var(--neon-cyan));
     box-shadow: 
         0 20px 40px rgba(0, 0, 0, 0.4),
-        0 0 30px var(--card-glow, rgba(6, 182, 212, 0.2));
+        0 0 30px var(--card-glow, rgba(6, 182, 212, 0.4)),
+        0 0 60px var(--card-glow, rgba(6, 182, 212, 0.2));
+    animation: neonGlow 1.5s ease-in-out infinite;
 }
 
 .cyber-card:hover::after {

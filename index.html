@@ -3,24 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cyber Arcade Ultimate - Pro Edition</title>
+    <title>Cyber Arcade</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
-    <script>
-        // Pre-hide sections based on URL params to prevent flash
-        (function() {
-            var params = new URLSearchParams(window.location.search);
-            var game = params.get('game');
-            var page = params.get('page');
-            
-            if (game) {
-                document.write('<style>#home-screen{display:none!important}</style>');
-            } else if (page && page !== 'home') {
-                document.write('<style>#home-screen{display:none!important}</style>');
-            }
-        })();
-    </script>
 </head>
 <body>
     <aside id="sidebar">
@@ -62,7 +48,7 @@
             <div class="nav-item" id="muteNavBtn">
                 <svg id="nav-icon-unmuted" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
                 <svg id="nav-icon-muted" class="hidden w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2 M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-                <span class="nav-text">Audio Link</span>
+                <span class="nav-text">Audio</span>
             </div>
         </div>
     </aside>
@@ -75,25 +61,28 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
-                <div class="status-dot"></div>
-                <span class="header-status">Neural Stream Active</span>
+                <button id="backBtn" class="back-btn hidden" onclick="switchScreen('home')">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    <span>Back</span>
+                </button>
             </div>
             <div class="header-right"></div>
         </header>
 
-        <section id="home-screen" style="display: block;">
+        <section id="home-screen" class="screen-active">
             <div class="home-title">
                 <h1>Arcade Hub</h1>
-                <p>Cybernetic Entertainment Core - Integrated V<span id="home-version">3.4.1</span></p>
+                <p>Cyber Entertainment Core v<span id="home-version">3.4.2</span></p>
             </div>
             <div id="game-grid" class="game-grid"></div>
             <footer class="home-footer">
-                <p>&copy; 2026 CYBER ARCADE HUB. ALL NEURAL RIGHTS RESERVED.</p>
-                <p class="mt-2 opacity-30 text-[10px]">GITHUB PAGES</p>
+                <p>&copy; 2026 Cyber Arcade Hub</p>
             </footer>
         </section>
 
-        <section id="dashboard-screen" style="display: none;">
+        <section id="dashboard-screen" class="screen-hidden">
             <div class="dashboard-title">
                 <h2>Neural Analytics</h2>
             </div>
@@ -117,7 +106,7 @@
             <div id="game-stats-grid" class="game-stats-grid"></div>
         </section>
 
-        <section id="guide-screen" style="display: none;">
+        <section id="guide-screen" class="screen-hidden">
             <div class="guide-header">
                 <h2>System Manual</h2>
                 <p>Operational protocols and gameplay directives</p>
@@ -125,46 +114,44 @@
             <div id="guide-content" class="guide-content"></div>
         </section>
 
-        <section id="about-screen" style="display: none;">
+        <section id="about-screen" class="screen-hidden">
             <div class="about-header">
                 <div class="about-logo">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
                 <h2>Cyber Arcade Hub</h2>
-                <p class="about-version">Advanced Neural Interface Matrix v<span id="app-version">3.4.1</span></p>
+                <p class="about-version">Neural Interface v<span id="app-version">3.4.2</span></p>
             </div>
             <div class="about-content">
                 <div class="about-card">
-                    <h3>Mission Statement</h3>
-                    <p>Cyber Arcade is a unified entertainment framework designed for high-performance neural links. Optimized for minimal latency and high visual fidelity, the hub serves as a central gateway to arcade modules and cognitive training layers.</p>
+                    <h3>Mission</h3>
+                    <p>A unified entertainment framework for arcade modules and cognitive training layers.</p>
                 </div>
                 <div class="about-features">
                     <div class="about-card">
-                        <h3>System Optimized For</h3>
+                        <h3>Supported Devices</h3>
                         <ul>
-                            <li>High-DPI Desktop Monitors</li>
-                            <li>Touch-Enabled iPad Pro Modules</li>
-                            <li>2026 Tesla Model Y Neural Terminals</li>
-                            <li>Starlink Mini Low-Latency Connections</li>
+                            <li>Desktop Browsers</li>
+                            <li>Mobile/Tablet</li>
+                            <li>Smart TV</li>
                         </ul>
                     </div>
                     <div class="about-card">
-                        <h3>Core Technologies</h3>
+                        <h3>Technologies</h3>
                         <ul>
-                            <li>Web Audio Synthesis Engine</li>
-                            <li>LocalStorage Persistence Protocol</li>
-                            <li>Responsive Vector Iconography</li>
-                            <li>Multi-Modal Input Handler</li>
+                            <li>Web Audio API</li>
+                            <li>LocalStorage</li>
+                            <li>Canvas 2D</li>
                         </ul>
                     </div>
                 </div>
                 <div class="about-footer">
-                    <p>Copyright &copy; 2026 Cyber Arcade Hub</p>
+                    <p>&copy; 2026 Cyber Arcade Hub</p>
                 </div>
             </div>
         </section>
 
-        <section id="game-container" style="display: none;">
+        <section id="game-container" class="screen-hidden">
             <div class="game-header">
                 <button id="pauseBtn" class="pause-btn hidden">PAUSE [P]</button>
                 <div class="game-info">
@@ -180,18 +167,13 @@
             </div>
             <div class="controls-hint"></div>
             <div id="mobile-controls" class="mobile-controls hidden">
-                <!-- Floating Joystick visual elements -->
                 <div id="joystick-base" class="joystick-base hidden">
                     <div id="joystick-knob" class="joystick-knob"></div>
                 </div>
-
-                <!-- Invisible zones for tapping/swiping -->
                 <div id="touch-zone" class="touch-zone">
                     <div id="tap-zone-left" class="tap-zone" data-action="left"></div>
                     <div id="tap-zone-right" class="tap-zone" data-action="right"></div>
                 </div>
-
-                <!-- System & Specialized Controls -->
                 <div class="control-row system-controls">
                     <button class="control-btn-small" data-action="menu">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 6h18M3 18h18"></path></svg>
@@ -203,7 +185,6 @@
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     </button>
                 </div>
-
                 <div class="piano-controls control-row hidden">
                     <button class="control-btn piano-key" data-key="0">S</button>
                     <button class="control-btn piano-key" data-key="1">D</button>

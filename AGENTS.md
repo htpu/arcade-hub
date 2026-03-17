@@ -7,28 +7,48 @@ Live URL: [https://arcade.htpu.net](https://arcade.htpu.net)
 
 ## Deployment
 
-### GitHub Pages (Current)
+### GitHub Pages
 
 The project uses **GitHub Pages** with custom domain `arcade.htpu.net`.
 
-**Setup:**
-1. Repository Settings → Pages
-2. Source: Deploy from a branch
-3. Branch: `main`, Folder: `/ (root)`
-4. Custom domain: `arcade.htpu.net` (force HTTPS after DNS propagates)
+**Setup via CLI:**
+```bash
+# 1. Enable GitHub Pages (run from repo root)
+curl -s -X POST "https://api.github.com/repos/<owner>/<repo>/pages" \
+  -H "Authorization: Bearer $(gh auth token)" \
+  -H "Accept: application/vnd.github+json" \
+  -H "Content-Type: application/json" \
+  -d '{"build_type":"legacy","source":{"branch":"main","path":"/"}}'
 
-**DNS Configuration:**
-- Add CNAME record in DNS provider:
-  - Type: CNAME
-  - Name: arcade
-  - Value: `<username>.github.io`
+# 2. Wait for build, then enable HTTPS
+curl -s -X PUT "https://api.github.com/repos/<owner>/<repo>/pages" \
+  -H "Authorization: Bearer $(gh auth token)" \
+  -H "Accept: application/vnd.github+json" \
+  -H "Content-Type: application/json" \
+  -d '{"https_enforced":true}'
+```
 
-**Deployment:**
-- Push to main branch → auto-deploys to GitHub Pages
-- Custom domain `arcade.htpu.net` will work automatically
+**AWS Route53 DNS:**
+```bash
+aws route53 change-resource-record-sets --hosted-zone-id <zone-id> --change-batch '{
+    "Changes": [{
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+            "Name": "arcade.htpu.net",
+            "Type": "CNAME",
+            "TTL": 300,
+            "ResourceRecords": [{"Value": "htpu.github.io"}]
+        }
+    }]
+}'
+```
 
-**No Scripts Required:**
-GitHub Pages auto-deploys on push. No workflow scripts needed.
+**Auto Deploy:**
+Push to main branch → auto-deploys.
+
+**Note:**
+- Certificate generation may take several minutes after DNS propagation
+- Enable "Enforce HTTPS" in GitHub settings after certificate is ready
 
 ---
 

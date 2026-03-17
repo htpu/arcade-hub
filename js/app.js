@@ -579,22 +579,8 @@ function handlePianoResult(result) {
     }
 }
 
-// Time update
-function startTimeUpdater() {
-    setInterval(() => {
-        UIManager.updateTime();
-    }, 1000);
-}
-
 // Initialize
 function initApp() {
-    // Handle initial hash on page load FIRST (before any UI renders)
-    const initialHash = window.location.hash.slice(1);
-    if (initialHash && Games[initialHash]) {
-        // Hide all screens immediately to prevent flash
-        UIManager.hideAllScreens();
-    }
-
     // Load stats
     StatsManager.load();
 
@@ -626,9 +612,6 @@ function initApp() {
         muteNavBtn.onclick = AudioManager.toggleMute;
     }
 
-    // Start time updater
-    startTimeUpdater();
-
     // Handle browser back/forward
     window.addEventListener('popstate', (e) => {
         const hash = window.location.hash.slice(1);
@@ -639,9 +622,11 @@ function initApp() {
         }
     });
 
-    // Handle initial hash - call switchScreen after everything is ready
+    // Handle initial hash - must be called after DOM is ready
+    const initialHash = window.location.hash.slice(1);
     if (initialHash && Games[initialHash]) {
-        switchScreen(initialHash, false);
+        // Use setTimeout to ensure DOM is fully ready
+        setTimeout(() => switchScreen(initialHash, false), 0);
     }
 }
 

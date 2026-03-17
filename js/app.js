@@ -316,6 +316,9 @@ function handleKeyDown(e) {
 
 // Mouse/touch handlers
 function handleCanvasClick(e) {
+    const canvas = document.getElementById('gameCanvas');
+    if (!canvas) return;
+
     if (!GameState.active && !document.getElementById('overlay')?.classList.contains('hidden')) {
         startGame();
         return;
@@ -344,6 +347,9 @@ function handleCanvasClick(e) {
 }
 
 function handleCanvasMouseMove(e) {
+    const canvas = document.getElementById('gameCanvas');
+    if (!canvas) return;
+
     if (GameState.paused) return;
 
     if (GameState.mode === 'breakout' && GameState.active) {
@@ -585,6 +591,8 @@ function initApp() {
         const el = document.getElementById(id);
         if (el) el.textContent = CONFIG.VERSION;
     });
+
+    const canvas = document.getElementById('gameCanvas');
 
     // Set up event listeners
     if (canvas) {

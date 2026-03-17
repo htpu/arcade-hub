@@ -8,11 +8,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
     <script>
-        // Pre-hide home screen if hash exists to prevent flash
+        // Pre-hide sections based on URL params to prevent flash
         (function() {
-            var hash = window.location.hash.slice(1);
-            var games = ['snake','tetris','racer','runner','c2048','core','breakout','memory','piano'];
-            if (hash && (games.indexOf(hash) >= 0 || hash === 'dashboard' || hash === 'guide' || hash === 'about')) {
+            var params = new URLSearchParams(window.location.search);
+            var game = params.get('game');
+            var page = params.get('page');
+            
+            if (game) {
+                document.write('<style>#home-screen{display:none!important}</style>');
+            } else if (page && page !== 'home') {
                 document.write('<style>#home-screen{display:none!important}</style>');
             }
         })();

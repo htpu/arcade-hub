@@ -75,26 +75,26 @@ async function switchScreen(mode, updateHistory = true) {
         hideMobileControls();
         UIManager.showScreen('home-screen');
         UIManager.refreshHighScores();
-        if (updateHistory) history.pushState({ screen: 'home' }, '', '#');
+        if (updateHistory) history.pushState({}, '', '?page=home');
     } else if (mode === 'dashboard') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.renderDashboard();
         UIManager.showScreen('dashboard-screen');
-        if (updateHistory) history.pushState({ screen: 'dashboard' }, '', '#dashboard');
+        if (updateHistory) history.pushState({}, '', '?page=dashboard');
     } else if (mode === 'guide') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.showScreen('guide-screen');
-        if (updateHistory) history.pushState({ screen: 'guide' }, '', '#guide');
+        if (updateHistory) history.pushState({}, '', '?page=guide');
     } else if (mode === 'about') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.showScreen('about-screen');
-        if (updateHistory) history.pushState({ screen: 'about' }, '', '#about');
+        if (updateHistory) history.pushState({}, '', '?page=about');
     } else if (Games[mode]) {
         GameState.mode = mode;
         UIManager.showScreen('game-container');
@@ -111,7 +111,7 @@ async function switchScreen(mode, updateHistory = true) {
         
         resetGame();
         UIManager.showOverlay('start');
-        if (updateHistory) history.pushState({ screen: mode }, '', `#${mode}`);
+        if (updateHistory) history.pushState({}, '', `?game=${mode}`);
     }
 }
 
@@ -614,9 +614,14 @@ function initApp() {
 
     // Handle browser back/forward
     window.addEventListener('popstate', (e) => {
-        const hash = window.location.hash.slice(1);
-        if (hash && (Games[hash] || hash === 'dashboard' || hash === 'guide' || hash === 'about')) {
-            switchScreen(hash, false);
+        var params = new URLSearchParams(window.location.search);
+        var game = params.get('game');
+        var page = params.get('page');
+        
+        if (game && Games[game]) {
+            switchScreen(game, false);
+        } else if (page === 'dashboard' || page === 'guide' || page === 'about') {
+            switchScreen(page, false);
         } else {
             switchScreen('home', false);
         }
@@ -627,10 +632,15 @@ function initApp() {
 function handleDOMReady() {
     initApp();
     
-    // Handle initial hash after DOM is ready
-    const initialHash = window.location.hash.slice(1);
-    if (initialHash && Games[initialHash]) {
-        switchScreen(initialHash, false);
+    // Handle initial page/game from URL params
+    var params = new URLSearchParams(window.location.search);
+    var game = params.get('game');
+    var page = params.get('page');
+    
+    if (game && Games[game]) {
+        switchScreen(game, false);
+    } else if (page === 'dashboard' || page === 'guide' || page === 'about') {
+        switchScreen(page, false);
     }
 }
 

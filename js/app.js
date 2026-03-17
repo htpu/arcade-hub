@@ -266,10 +266,14 @@ function handleKeyDown(e) {
     // Runner / Racer
     if (GameState.mode === 'runner' || GameState.mode === 'racer') {
         if (key === 'ArrowLeft') {
-            Games[GameState.mode].move('left');
+            const game = Games[GameState.mode];
+            if (game.moveLane) game.moveLane('left');
+            else if (game.move) game.move('left');
         }
         if (key === 'ArrowRight') {
-            Games[GameState.mode].move('right');
+            const game = Games[GameState.mode];
+            if (game.moveLane) game.moveLane('right');
+            else if (game.move) game.move('right');
         }
     }
 

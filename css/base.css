@@ -119,6 +119,33 @@ h1, h2, h3 {
     }
 }
 
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Staggered slide in for game cards */
+.game-grid .cyber-card {
+    animation: slideInLeft 0.4s ease-out backwards;
+}
+
 /* Neon blink animation */
 @keyframes neonPulse {
     0%, 100% { 

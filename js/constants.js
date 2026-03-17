@@ -2,7 +2,7 @@
  * Constants and Configuration
  */
 const CONFIG = {
-    VERSION: '3.4.4',
+    VERSION: '3.4.5',
     CANVAS_WIDTH: 800,
     CANVAS_HEIGHT: 500,
     STORAGE_KEY: 'cyber_hub_v8_stats',

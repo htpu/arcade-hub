@@ -58,12 +58,10 @@
     width: 56px;
     height: 56px;
     margin-bottom: 20px;
-    background: rgba(6, 182, 212, 0.15);
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--card-accent, rgba(6, 182, 212, 0.5));
     transition: all 0.3s;
     position: relative;
 }
@@ -71,15 +69,11 @@
 .card-icon svg {
     width: 28px;
     height: 28px;
-    color: var(--neon-cyan);
     transition: transform 0.3s;
-    filter: drop-shadow(0 0 3px var(--neon-cyan));
 }
 
 .cyber-card:hover .card-icon {
     transform: scale(1.1);
-    border-color: var(--card-accent, var(--neon-cyan));
-    background: rgba(6, 182, 212, 0.25);
     box-shadow: 0 0 25px var(--card-glow, rgba(6, 182, 212, 0.5));
 }
 

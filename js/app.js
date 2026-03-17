@@ -49,7 +49,7 @@ const Games = {
 };
 
 // Screen switching
-async function switchScreen(mode) {
+async function switchScreen(mode, updateHistory = true) {
     try {
         await AudioManager.init();
     } catch (e) {}
@@ -75,22 +75,26 @@ async function switchScreen(mode) {
         hideMobileControls();
         UIManager.showScreen('home-screen');
         UIManager.refreshHighScores();
+        if (updateHistory) history.pushState({ screen: 'home' }, '', '#');
     } else if (mode === 'dashboard') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.renderDashboard();
         UIManager.showScreen('dashboard-screen');
+        if (updateHistory) history.pushState({ screen: 'dashboard' }, '', '#dashboard');
     } else if (mode === 'guide') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.showScreen('guide-screen');
+        if (updateHistory) history.pushState({ screen: 'guide' }, '', '#guide');
     } else if (mode === 'about') {
         GameState.active = false;
         clearInterval(GameState.loop);
         hideMobileControls();
         UIManager.showScreen('about-screen');
+        if (updateHistory) history.pushState({ screen: 'about' }, '', '#about');
     } else if (Games[mode]) {
         GameState.mode = mode;
         UIManager.showScreen('game-container');
@@ -107,6 +111,7 @@ async function switchScreen(mode) {
         
         resetGame();
         UIManager.showOverlay('start');
+        if (updateHistory) history.pushState({ screen: mode }, '', `#${mode}`);
     }
 }
 
@@ -616,6 +621,22 @@ function initApp() {
 
     // Start time updater
     startTimeUpdater();
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', (e) => {
+        const hash = window.location.hash.slice(1);
+        if (hash && (Games[hash] || hash === 'dashboard' || hash === 'guide' || hash === 'about')) {
+            switchScreen(hash, false);
+        } else {
+            switchScreen('home', false);
+        }
+    });
+
+    // Handle initial hash on page load
+    const initialHash = window.location.hash.slice(1);
+    if (initialHash && Games[initialHash]) {
+        switchScreen(initialHash, false);
+    }
 }
 
 // Auto-initialize when DOM is ready

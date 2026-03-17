@@ -621,18 +621,21 @@ function initApp() {
             switchScreen('home', false);
         }
     });
-
-    // Handle initial hash - must be called after DOM is ready
-    const initialHash = window.location.hash.slice(1);
-    if (initialHash && Games[initialHash]) {
-        // Use setTimeout to ensure DOM is fully ready
-        setTimeout(() => switchScreen(initialHash, false), 0);
-    }
 }
 
 // Auto-initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initApp);
-} else {
+function handleDOMReady() {
     initApp();
+    
+    // Handle initial hash after DOM is ready
+    const initialHash = window.location.hash.slice(1);
+    if (initialHash && Games[initialHash]) {
+        switchScreen(initialHash, false);
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', handleDOMReady);
+} else {
+    handleDOMReady();
 }

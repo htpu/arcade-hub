@@ -100,12 +100,17 @@ h1, h2, h3 {
 
 /* Screen transitions */
 .screen-hidden {
-    display: none;
+    display: none !important;
 }
 
 .screen-active {
-    display: block;
+    display: block !important;
     animation: fadeIn 0.3s ease-out;
+}
+
+/* Game container needs flex */
+#game-container.screen-active {
+    display: flex !important;
 }
 
 @keyframes fadeIn {
